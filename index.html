@@ -1,0 +1,1429 @@
+<!-- ROADi © 2026 Leandra McGregor -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3a2a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>GreenPath</title>
+<link rel="manifest" href="#" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-50: #f0faf0;
+    --green-100: #d0efd0;
+    --green-200: #8fd48f;
+    --green-400: #3a9b3a;
+    --green-600: #1e6b1e;
+    --green-800: #0f3d0f;
+    --green-900: #071f07;
+    --amber-400: #d4941a;
+    --amber-200: #f5c842;
+    --teal-400: #1d9e95;
+    --teal-200: #5dcac1;
+    --coral-400: #d85a30;
+    --bg: #0f2318;
+    --bg2: #172d20;
+    --bg3: #1e3828;
+    --surface: #243d2c;
+    --surface2: #2c4a35;
+    --text: #e8f5e8;
+    --text2: #a0c8a0;
+    --text3: #6a9a6a;
+    --border: rgba(100,200,100,0.12);
+    --border2: rgba(100,200,100,0.22);
+    --accent: #4fc97e;
+    --accent2: #2ea85c;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    background: radial-gradient(ellipse at 30% 20%, #1a4a2a 0%, var(--bg) 60%);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #auth-screen::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(79,201,126,0.08);
+    pointer-events: none;
+  }
+  #auth-screen::after {
+    content: '';
+    position: absolute;
+    top: -80px; right: -40px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    border: 1px solid rgba(79,201,126,0.12);
+    pointer-events: none;
+  }
+  .auth-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem;
+    color: var(--accent);
+    letter-spacing: -1px;
+    margin-bottom: 0.25rem;
+  }
+  .auth-tagline {
+    font-size: 0.9rem;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    font-weight: 500;
+  }
+  .auth-box {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 2rem;
+  }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .auth-tab {
+    flex: 1; padding: 0.6rem; text-align: center;
+    font-size: 0.85rem; font-weight: 500; cursor: pointer;
+    color: var(--text3); border-bottom: 2px solid transparent;
+    margin-bottom: -1px; transition: all 0.2s;
+  }
+  .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 0.78rem; color: var(--text3); margin-bottom: 0.4rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; }
+  .field input {
+    width: 100%; padding: 0.75rem 1rem;
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus { border-color: var(--accent); }
+  .field input::placeholder { color: var(--text3); }
+  .btn-primary {
+    width: 100%; padding: 0.85rem;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: #5ad98a; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* ===== TOP NAV ===== */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--accent); }
+  .topbar-user { font-size: 0.8rem; color: var(--text3); cursor: pointer; }
+  .topbar-user:hover { color: var(--accent); }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottomnav {
+    display: flex; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg2); border-top: 1px solid var(--border2);
+    z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.7rem 0.5rem; cursor: pointer; gap: 4px;
+    color: var(--text3); transition: color 0.2s; font-size: 0.65rem; font-weight: 500;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-item.active { color: var(--accent); }
+
+  /* ===== MAIN CONTENT AREA ===== */
+  .content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+
+  /* ===== HOME / NEW TRIP ===== */
+  .trip-hero {
+    padding: 1.5rem 1.25rem 1rem;
+    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  }
+  .trip-hero h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--text); line-height: 1.2; }
+  .trip-hero p { font-size: 0.85rem; color: var(--text3); margin-top: 0.3rem; }
+
+  .section { padding: 1.25rem; }
+  .section-label { font-size: 0.75rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.75rem; }
+
+  .dest-input {
+    width: 100%; padding: 0.9rem 1rem 0.9rem 2.8rem;
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: var(--radius); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 1rem;
+    outline: none; transition: border-color 0.2s; position: relative;
+  }
+  .dest-input:focus { border-color: var(--accent); }
+  .dest-input::placeholder { color: var(--text3); }
+  .dest-wrap { position: relative; }
+  .dest-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+  .dest-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+  /* MODE SELECTOR */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  .mode-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 0.5rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .mode-card:hover { border-color: var(--border2); }
+  .mode-card.selected { background: rgba(79,201,126,0.1); border-color: var(--accent); }
+  .mode-card.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: 0.65rem; color: var(--accent); font-weight: 700; }
+  .mode-card { position: relative; }
+  .mode-icon { font-size: 1.6rem; }
+  .mode-name { font-size: 0.72rem; color: var(--text2); font-weight: 500; text-align: center; }
+  .mode-card.selected .mode-name { color: var(--accent); }
+  .modes-hint { font-size: 0.75rem; color: var(--text3); margin-top: 0.5rem; text-align: center; }
+
+  /* TRIP TIMER */
+  .timer-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 200; padding: 2rem;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .timer-screen.active { opacity: 1; pointer-events: all; }
+  .timer-dest { font-size: 0.85rem; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; margin-bottom: 0.5rem; text-align: center; }
+  .timer-dest span { color: var(--accent); }
+  .timer-mode-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 100px; padding: 0.35rem 1rem;
+    font-size: 0.8rem; color: var(--text2); margin-bottom: 2.5rem;
+  }
+  .timer-ring {
+    width: 220px; height: 220px; position: relative; margin-bottom: 2rem;
+  }
+  .timer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .timer-ring circle { fill: none; stroke-width: 6; }
+  .timer-ring .track { stroke: var(--surface2); }
+  .timer-ring .progress { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+  .timer-display {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .timer-time { font-family: 'DM Serif Display', serif; font-size: 3rem; color: var(--text); letter-spacing: -2px; }
+  .timer-label { font-size: 0.75rem; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; }
+  .timer-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    width: 100%; max-width: 340px; margin-bottom: 2.5rem;
+  }
+  .timer-stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.9rem; text-align: center;
+  }
+  .timer-stat-val { font-size: 1.3rem; font-weight: 600; color: var(--accent); }
+  .timer-stat-label { font-size: 0.7rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+  .btn-arrive {
+    width: 100%; max-width: 300px; padding: 1rem;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .btn-arrive:active { transform: scale(0.97); }
+  .btn-cancel-trip { background: none; border: 1px solid var(--border2); color: var(--text3); border-radius: var(--radius); padding: 0.7rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 0.75rem; }
+
+  /* ARRIVAL CELEBRATION */
+  .arrival-screen {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 300; padding: 2rem; text-align: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .arrival-screen.active { opacity: 1; pointer-events: all; }
+  .arrival-emoji { font-size: 4rem; margin-bottom: 1rem; animation: bounce 0.6s ease; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-20px); } }
+  .arrival-title { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 0.25rem; }
+  .arrival-sub { font-size: 0.9rem; color: var(--text3); margin-bottom: 2rem; }
+  .arrival-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; max-width: 340px; margin-bottom: 1.5rem; }
+  .arrival-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 1rem;
+  }
+  .arrival-card-val { font-size: 1.4rem; font-weight: 700; }
+  .arrival-card-label { font-size: 0.68rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 3px; }
+  .co2-val { color: var(--accent); }
+  .cash-val { color: var(--amber-200); }
+  .time-val { color: var(--teal-200); }
+  .pts-val { color: var(--coral-400); }
+
+  /* ===== FEED / HISTORY ===== */
+  .feed-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin: 0 1.25rem 0.75rem;
+    padding: 1rem 1.1rem; transition: border-color 0.2s;
+  }
+  .feed-item:hover { border-color: var(--border2); }
+  .feed-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+  .feed-dest { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+  .feed-time { font-size: 0.75rem; color: var(--text3); }
+  .feed-meta { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+  .feed-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(79,201,126,0.1); border: 1px solid rgba(79,201,126,0.2);
+    border-radius: 100px; padding: 0.2rem 0.6rem;
+    font-size: 0.72rem; color: var(--accent); font-weight: 500;
+  }
+  .feed-duration { font-size: 0.78rem; color: var(--text3); }
+  .feed-stats { display: flex; gap: 1rem; }
+  .feed-stat { font-size: 0.8rem; }
+  .feed-stat span { color: var(--text3); }
+
+  /* ===== PROFILE / STATS ===== */
+  .profile-hero {
+    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+    padding: 2rem 1.25rem 1.5rem; text-align: center;
+  }
+  .avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-400), var(--teal-400));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: white;
+    margin: 0 auto 0.75rem;
+  }
+  .profile-name { font-family: 'DM Serif Display', serif; font-size: 1.5rem; }
+  .profile-join { font-size: 0.78rem; color: var(--text3); margin-top: 0.2rem; }
+  .level-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(212,148,26,0.15); border: 1px solid rgba(212,148,26,0.3);
+    border-radius: 100px; padding: 0.3rem 0.9rem;
+    font-size: 0.78rem; color: var(--amber-200); font-weight: 600;
+    margin-top: 0.75rem;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; padding: 1.25rem; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.1rem;
+  }
+  .stat-card-val { font-size: 1.6rem; font-weight: 700; }
+  .stat-card-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .stat-card-sub { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+
+  /* LEADERBOARD */
+  .lb-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border);
+  }
+  .lb-rank { font-family: 'DM Serif Display', serif; font-size: 1.1rem; width: 28px; color: var(--text3); }
+  .lb-rank.gold { color: var(--amber-200); }
+  .lb-rank.silver { color: #c0c0c0; }
+  .lb-rank.bronze { color: #cd7f32; }
+  .lb-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--surface2); display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 600; color: var(--text2); flex-shrink: 0;
+  }
+  .lb-info { flex: 1; }
+  .lb-name { font-size: 0.9rem; font-weight: 500; }
+  .lb-pts { font-size: 0.75rem; color: var(--text3); }
+  .lb-score { font-size: 0.9rem; font-weight: 600; color: var(--accent); }
+
+  /* MAYOR MECHANIC */
+  .mayor-card {
+    background: linear-gradient(135deg, rgba(212,148,26,0.12), rgba(79,201,126,0.08));
+    border: 1px solid rgba(212,148,26,0.3);
+    border-radius: var(--radius); margin: 0 1.25rem 0.75rem;
+    padding: 1rem 1.1rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .mayor-crown { font-size: 1.8rem; flex-shrink: 0; }
+  .mayor-info { flex: 1; }
+  .mayor-venue { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+  .mayor-name { font-size: 0.78rem; color: var(--amber-200); margin-top: 2px; font-weight: 500; }
+  .mayor-pts { font-size: 0.75rem; color: var(--text3); margin-top: 1px; }
+  .mayor-yours { background: linear-gradient(135deg, rgba(212,148,26,0.2), rgba(79,201,126,0.12)); border-color: var(--amber-200); }
+  .mayor-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(212,148,26,0.15); border: 1px solid rgba(212,148,26,0.35);
+    border-radius: 100px; padding: 0.25rem 0.7rem;
+    font-size: 0.72rem; color: var(--amber-200); font-weight: 600;
+  }
+  .arrival-mayor-banner {
+    width: 100%; max-width: 340px;
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    margin-bottom: 1.25rem; text-align: left;
+  }
+  .arrival-mayor-banner.crowned {
+    background: linear-gradient(135deg, rgba(212,148,26,0.2), rgba(79,201,126,0.1));
+    border: 1px solid rgba(212,148,26,0.4);
+  }
+  .arrival-mayor-banner.challenger {
+    background: rgba(79,201,126,0.07);
+    border: 1px solid var(--border2);
+  }
+  .arrival-mayor-banner.defending {
+    background: rgba(212,148,26,0.1);
+    border: 1px solid rgba(212,148,26,0.3);
+  }
+  .arrival-mayor-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.25rem; }
+  .arrival-mayor-sub { font-size: 0.82rem; color: var(--text2); line-height: 1.4; }
+  .board-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 1.25rem; margin-bottom: 0.25rem; }
+  .board-tab { padding: 0.75rem 0; margin-right: 1.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.06em; }
+  .board-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .empty-mayors { text-align: center; padding: 3rem 2rem; color: var(--text3); }
+  .empty-mayors .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .empty-mayors .empty-text { font-size: 0.9rem; }
+
+  /* BADGES — arrival screen new badge notifications */
+  .arrival-badges-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--amber-200); margin-bottom: 0.6rem; }
+  .arrival-badge-item { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .arrival-badge-emoji { font-size: 1.6rem; flex-shrink: 0; }
+  .arrival-badge-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+  .arrival-badge-desc { font-size: 0.75rem; color: var(--text3); margin-top: 1px; }
+  #arrival-badges { width: 100%; max-width: 340px; background: rgba(212,148,26,0.07); border: 1px solid rgba(212,148,26,0.2); border-radius: var(--radius); padding: 1rem 1.1rem; margin-bottom: 1rem; }
+
+  /* BADGES — profile screen badge wall */
+  .badges-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; padding: 1.25rem; }
+  .profile-badge { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; position: relative; transition: all 0.2s; }
+  .profile-badge.earned { border-color: rgba(212,148,26,0.4); background: rgba(212,148,26,0.07); }
+  .profile-badge.locked { opacity: 0.45; filter: grayscale(0.6); }
+  .profile-badge-emoji { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .profile-badge-name { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+  .profile-badge-desc { font-size: 0.72rem; color: var(--text3); margin-top: 2px; line-height: 1.4; }
+  .profile-badge-check { position: absolute; top: 8px; right: 10px; font-size: 0.7rem; color: var(--amber-200); font-weight: 700; }
+
+  .tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 1.25rem; }
+  .tab { padding: 0.75rem 0; margin-right: 1.5rem; font-size: 0.82rem; font-weight: 500; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* START TRIP BUTTON */
+  .start-btn-wrap { padding: 1rem 1.25rem 0; }
+  .btn-start {
+    width: 100%; padding: 1rem;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.02em;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-start:disabled { background: var(--surface2); color: var(--text3); cursor: not-allowed; }
+  .btn-start:not(:disabled):hover { background: #5ad98a; }
+
+  /* ECO TIPS */
+  .tip-card {
+    background: rgba(79,201,126,0.06); border: 1px solid rgba(79,201,126,0.15);
+    border-radius: var(--radius); margin: 0.5rem 1.25rem;
+    padding: 0.85rem 1rem; display: flex; align-items: flex-start; gap: 0.75rem;
+  }
+  .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .tip-text { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+
+  /* Progress bar for XP */
+  .xp-bar-wrap { padding: 0 1.25rem 1.25rem; }
+  .xp-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text3); margin-bottom: 0.4rem; }
+  .xp-bar { height: 6px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--teal-400)); border-radius: 100px; transition: width 0.8s ease; }
+
+  /* empty state */
+  .empty { text-align: center; padding: 3rem 2rem; color: var(--text3); }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .empty-text { font-size: 0.9rem; }
+
+  @media (min-width: 500px) {
+    .modes { grid-template-columns: repeat(4, 1fr); }
+    .arrival-cards { grid-template-columns: repeat(4, 1fr); max-width: 440px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== AUTH ===== -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-logo">GreenPath</div>
+  <div class="auth-tagline">Your planet. Your commute. Your impact.</div>
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</div>
+    </div>
+    <div id="login-form">
+      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" /></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pw" placeholder="••••••••" /></div>
+      <button class="btn-primary" onclick="doLogin()">Sign In →</button>
+    </div>
+    <div id="signup-form" style="display:none">
+      <div class="field"><label>Your Name</label><input type="text" id="signup-name" placeholder="Alex Rivera" /></div>
+      <div class="field"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com" /></div>
+      <div class="field"><label>Password</label><input type="password" id="signup-pw" placeholder="Create a password" /></div>
+      <button class="btn-primary" onclick="doSignup()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app-screen" class="screen">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">GreenPath</div>
+    <div class="topbar-user" onclick="showTab('profile')" id="topbar-user">Alex ▾</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content">
+      <div class="trip-hero">
+        <h2>Where are you<br><em>going today?</em></h2>
+        <p>Track your trip and earn green points.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Destination</div>
+        <div class="dest-wrap">
+          <div class="dest-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="11" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          </div>
+          <input class="dest-input" id="dest-input" placeholder="Coffee shop, gym, library…" type="text" />
+        </div>
+      </div>
+
+      <div class="section" style="padding-top:0">
+        <div class="section-label">How are you getting there?</div>
+        <div class="modes" id="mode-grid">
+          <div class="mode-card" onclick="selectMode(this,'Walking','🚶')">
+            <div class="mode-icon">🚶</div><div class="mode-name">Walking</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'Running','🏃')">
+            <div class="mode-icon">🏃</div><div class="mode-name">Running</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'Cycling','🚴')">
+            <div class="mode-icon">🚴</div><div class="mode-name">Cycling</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'E-Bike','⚡')">
+            <div class="mode-icon">⚡</div><div class="mode-name">E-Bike</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'Transit','🚌')">
+            <div class="mode-icon">🚌</div><div class="mode-name">Transit</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'Skateboard','🛹')">
+            <div class="mode-icon">🛹</div><div class="mode-name">Skateboard</div>
+          </div>
+        </div>
+        <div class="modes-hint">Tap one or more — combine modes for your full journey</div>
+      </div>
+
+      <div class="start-btn-wrap">
+        <button class="btn-start" id="start-btn" onclick="startTrip()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Trip
+        </button>
+      </div>
+
+      <div class="tip-card" style="margin-top:1rem">
+        <div class="tip-icon">🌱</div>
+        <div class="tip-text" id="eco-tip">Walking 1 mile instead of driving saves about 0.4 kg of CO₂ — the same as charging your phone 50 times.</div>
+      </div>
+    </div>
+
+    <!-- FEED TAB -->
+    <div id="tab-feed" class="tab-content" style="display:none">
+      <div style="padding: 1.25rem 1.25rem 0.75rem; display:flex; justify-content:space-between; align-items:center">
+        <div style="font-family:'DM Serif Display',serif; font-size:1.3rem">Your Trips</div>
+        <div style="font-size:0.78rem; color:var(--text3)" id="trip-count">0 trips</div>
+      </div>
+      <div id="feed-list"></div>
+    </div>
+
+    <!-- LEADERBOARD TAB -->
+    <div id="tab-board" class="tab-content" style="display:none">
+      <div style="padding: 1.25rem 1.25rem 0.75rem;">
+        <div style="font-family:'DM Serif Display',serif; font-size:1.3rem">Community Board</div>
+        <div style="font-size:0.8rem; color:var(--text3); margin-top:0.2rem">Ranked by green points this month</div>
+      </div>
+      <div class="board-tabs">
+        <div class="board-tab active" id="btab-rankings" onclick="showBoardTab('rankings')">Rankings</div>
+        <div class="board-tab" id="btab-mayors" onclick="showBoardTab('mayors')">Mayors 👑</div>
+      </div>
+      <div id="board-rankings">
+        <div id="leaderboard"></div>
+      </div>
+      <div id="board-mayors" style="display:none">
+        <div id="mayors-list"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="tab-content" style="display:none">
+      <div class="profile-hero">
+        <div class="avatar" id="profile-avatar">A</div>
+        <div class="profile-name" id="profile-name">Alex Rivera</div>
+        <div class="profile-join">Member since May 2026</div>
+        <div class="level-badge">⭐ Eco Commuter — Level 3</div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>Level 3</span><span id="xp-text">340 / 500 XP</span></div>
+        <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:68%"></div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-val co2-val" id="profile-co2">0 kg</div>
+          <div class="stat-card-label">CO₂ Saved</div>
+          <div class="stat-card-sub">vs. driving</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val cash-val" id="profile-cash">$0</div>
+          <div class="stat-card-label">Gas Saved</div>
+          <div class="stat-card-sub">at $3.50/gal avg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val time-val" id="profile-trips">0</div>
+          <div class="stat-card-label">Total Trips</div>
+          <div class="stat-card-sub">all modes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val pts-val" id="profile-pts">340</div>
+          <div class="stat-card-label">Green Points</div>
+          <div class="stat-card-sub">this month</div>
+        </div>
+      </div>
+      <div style="padding: 0 1.25rem 1rem;">
+        <button onclick="doLogout()" style="width:100%;padding:0.75rem;background:none;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text3);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Sign Out</button>
+      </div>
+
+      <!-- BADGE WALL — shows all badges, earned ones highlighted, locked ones greyed out -->
+      <div style="padding: 0 1.25rem 0.5rem;">
+        <div style="font-family:'DM Serif Display',serif; font-size:1.1rem;">Badges</div>
+        <div style="font-size:0.78rem; color:var(--text3); margin-top:0.2rem;">Earn them by how you travel</div>
+      </div>
+      <div class="badges-grid" id="profile-badges"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottomnav">
+    <div class="nav-item active" id="nav-home" onclick="showTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Go
+    </div>
+    <div class="nav-item" id="nav-feed" onclick="showTab('feed')">
+      <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Trips
+    </div>
+    <div class="nav-item" id="nav-board" onclick="showTab('board')">
+      <svg viewBox="0 0 24 24"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+      Board
+    </div>
+    <div class="nav-item" id="nav-profile" onclick="showTab('profile')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Me
+    </div>
+  </nav>
+</div><!-- /app-screen -->
+
+<!-- ===== ACTIVE TRIP TIMER ===== -->
+<div class="timer-screen" id="timer-screen">
+  <div class="timer-dest">Heading to <span id="timer-dest-name">—</span></div>
+  <div class="timer-mode-badge">
+    <span id="timer-mode-emoji">🚶</span>
+    <span id="timer-mode-name">Walking</span>
+  </div>
+  <div class="timer-ring">
+    <svg viewBox="0 0 220 220">
+      <circle class="track" cx="110" cy="110" r="98" />
+      <circle class="progress" id="timer-arc" cx="110" cy="110" r="98"
+        stroke-dasharray="616" stroke-dashoffset="0" />
+    </svg>
+    <div class="timer-display">
+      <div class="timer-time" id="timer-clock">00:00</div>
+      <div class="timer-label">elapsed</div>
+    </div>
+  </div>
+  <div class="timer-stats">
+    <div class="timer-stat">
+      <div class="timer-stat-val co2-val" id="live-co2">0.0 kg</div>
+      <div class="timer-stat-label">CO₂ Saving</div>
+    </div>
+    <div class="timer-stat">
+      <div class="timer-stat-val cash-val" id="live-cash">$0.00</div>
+      <div class="timer-stat-label">Gas Saved</div>
+    </div>
+  </div>
+  <button class="btn-arrive" onclick="arriveAtDestination()">🏁 I've Arrived!</button>
+  <button class="btn-cancel-trip" onclick="cancelTrip()">Cancel Trip</button>
+</div>
+
+<!-- ===== ARRIVAL SCREEN ===== -->
+<div class="arrival-screen" id="arrival-screen">
+  <div class="arrival-emoji" id="arrival-emoji">🎉</div>
+  <div class="arrival-title">You made it!</div>
+  <div class="arrival-sub" id="arrival-dest-label">Arrived at your destination</div>
+  <div class="arrival-cards">
+    <div class="arrival-card">
+      <div class="arrival-card-val time-val" id="arr-time">0:00</div>
+      <div class="arrival-card-label">Duration</div>
+    </div>
+    <div class="arrival-card">
+      <div class="arrival-card-val co2-val" id="arr-co2">0.0 kg</div>
+      <div class="arrival-card-label">CO₂ Saved</div>
+    </div>
+    <div class="arrival-card">
+      <div class="arrival-card-val cash-val" id="arr-cash">$0.00</div>
+      <div class="arrival-card-label">Gas Saved</div>
+    </div>
+    <div class="arrival-card">
+      <div class="arrival-card-val pts-val" id="arr-pts">+10</div>
+      <div class="arrival-card-label">Points</div>
+    </div>
+  </div>
+  <div id="arrival-mayor-banner" class="arrival-mayor-banner challenger" style="display:none">
+    <div class="arrival-mayor-title" id="arrival-mayor-title">👑 New Mayor!</div>
+    <div class="arrival-mayor-sub" id="arrival-mayor-sub"></div>
+  </div>
+  <!-- Badge notifications — only shown if new badges were earned this trip -->
+  <div id="arrival-badges" style="display:none"></div>
+  <button class="btn-primary" style="max-width:300px; margin-bottom:0.75rem" onclick="saveTrip()">Save Trip ✓</button>
+</div>
+
+<script>
+// =============================================================
+// GREENPATH — Main App Logic
+// =============================================================
+// HOW THIS FILE IS ORGANIZED:
+//   1. STATE          — variables that hold the app's current data
+//   2. CONSTANTS      — fixed data like mode stats, tips, leaderboard
+//   3. VENUE / MAYOR  — logic for tracking who's the mayor of each spot
+//   4. BADGES         — logic for earning and displaying achievement badges
+//   5. AUTH           — login / signup / logout
+//   6. NAVIGATION     — switching between the main tabs
+//   7. MODE SELECTION — picking how you got there (walk, bike, etc.)
+//   8. TRIP           — starting, timing, and completing a journey
+//   9. FEED           — your personal trip history
+//  10. LEADERBOARD    — community rankings
+// =============================================================
+
+
+// =============================================================
+// 1. STATE
+// These are the "live" variables that change as the user does things.
+// Think of them like the app's short-term memory.
+// =============================================================
+
+let currentUser = null;        // who is logged in right now (null = nobody)
+let selectedModes = [];        // array of transport modes chosen for the current trip
+                               // e.g. [{ name: 'Transit', emoji: '🚌' }, { name: 'Walking', emoji: '🚶' }]
+let tripStart = null;          // timestamp (milliseconds) when the current trip started
+let timerInterval = null;      // reference to the setInterval timer so we can stop it later
+let trips = [];                // array of all completed trips for the current session
+let userStats = {              // running totals shown on the profile screen
+  co2: 0,                      //   total CO2 saved (kg)
+  cash: 0,                     //   total gas money saved ($)
+  pts: 340,                    //   total green points (starts at 340 as a demo value)
+  trips: 0                     //   total trips completed
+};
+
+// =============================================================
+// 2. CONSTANTS
+// Fixed data that doesn't change during the session.
+// =============================================================
+
+// Each transport mode has three values used for calculations:
+//   co2PerMin  — how much CO2 (kg) is saved per minute vs. driving
+//                (based on avg car emitting ~0.105 kg CO2/min at 30mph)
+//   cashPerMin — how much gas money is saved per minute vs. driving
+//   pts        — base green points awarded for using this mode
+const modeData = {
+  'Walking':     { co2PerMin: 0.09,  cashPerMin: 0.012, pts: 15, emoji: '🚶' },
+  'Running':     { co2PerMin: 0.10,  cashPerMin: 0.014, pts: 18, emoji: '🏃' },
+  'Cycling':     { co2PerMin: 0.095, cashPerMin: 0.013, pts: 20, emoji: '🚴' },
+  'E-Bike':      { co2PerMin: 0.085, cashPerMin: 0.011, pts: 16, emoji: '⚡' },
+  'Transit':     { co2PerMin: 0.06,  cashPerMin: 0.009, pts: 12, emoji: '🚌' },
+  'Skateboard':  { co2PerMin: 0.09,  cashPerMin: 0.012, pts: 14, emoji: '🛹' },
+};
+
+// Rotating eco facts shown on the home screen after login and after each trip
+const ecoTips = [
+  "Walking 1 mile instead of driving saves about 0.4 kg of CO₂ — the same as charging your phone 50 times.",
+  "Cycling is 50× more energy-efficient than driving. A meal of pasta can power 3 miles by bike.",
+  "If one in ten commuters switched to transit, the US would cut 37 million tons of CO₂ annually.",
+  "E-bikes produce 10–30g of CO₂/km — cars produce 180g/km on average.",
+  "Running to work burns ~100 calories per mile and saves ~$0.60 per mile in gas.",
+  "Skateboarding at 10 mph uses zero fuel and zero emissions — pure physics.",
+];
+
+// Simulated community members for the leaderboard.
+// isMe: true marks the entry that belongs to the logged-in user —
+// their points will update live as they complete trips.
+const leaderboardData = [
+  { name: 'Maya L.',   pts: 1240, trips: 47, initials: 'ML' },
+  { name: 'Jordan K.', pts: 980,  trips: 38, initials: 'JK' },
+  { name: 'Sam P.',    pts: 820,  trips: 33, initials: 'SP' },
+  { name: 'Alex R.',   pts: 340,  trips: 0,  initials: 'AR', isMe: true },
+  { name: 'Casey T.',  pts: 290,  trips: 12, initials: 'CT' },
+  { name: 'River M.',  pts: 210,  trips: 8,  initials: 'RM' },
+];
+
+// =============================================================
+// 3. VENUE / MAYOR DATA
+// Tracks eco-points per venue per user to determine who holds
+// the "mayor" crown at each location.
+//
+// venueData structure:
+//   key   = normalized venue name (lowercase, trimmed)
+//   value = {
+//     name     : display name of the venue
+//     topUser  : name of the current mayor
+//     topPts   : their total eco-points at this venue
+//     visits   : array of all visits { user, pts, mode }
+//   }
+// =============================================================
+
+// Pre-seeded with a few demo venues so the Mayors tab isn't empty on first load
+let venueData = {
+  'aldi':        { name: 'Aldi',        topUser: 'Maya L.',   topPts: 180, visits: [{ user: 'Maya L.',   pts: 180, mode: '🚴 Cycling' }] },
+  'whole foods': { name: 'Whole Foods', topUser: 'Jordan K.', topPts: 140, visits: [{ user: 'Jordan K.', pts: 140, mode: '🚶 Walking' }] },
+  'library':     { name: 'Library',     topUser: 'Sam P.',    topPts: 95,  visits: [{ user: 'Sam P.',    pts: 95,  mode: '🚌 Transit' }] },
+};
+
+// Turns a venue name into a consistent lookup key
+// e.g. "  Aldi  " → "aldi", "Whole Foods" → "whole foods"
+function normalizeVenue(name) {
+  return name.trim().toLowerCase();
+}
+
+// Returns the current mayor and their points for a venue, or null if venue doesn't exist yet
+function getMayor(venueKey) {
+  const v = venueData[venueKey];
+  if (!v) return null;
+  return { name: v.topUser, pts: v.topPts };
+}
+
+// Adds up all the eco-points the current user has earned at a specific venue
+// Used to calculate how close they are to taking the mayorship
+function getUserVenuePts(venueKey) {
+  const v = venueData[venueKey];
+  if (!v) return 0;
+  // filter visits to just this user's, then sum their points
+  const mine = v.visits.filter(x => x.user === currentUser);
+  return mine.reduce((sum, x) => sum + x.pts, 0);
+}
+
+// Records a new visit and returns one of three mayor statuses:
+//   'crowned'   — user just became the new mayor (or first ever mayor)
+//   'defending' — user was already the mayor and still is
+//   'challenger'— someone else is still ahead
+function updateVenue(venueKey, venueName, pts, modeLabel) {
+  // create venue entry if it's a brand new location
+  if (!venueData[venueKey]) {
+    venueData[venueKey] = { name: venueName, topUser: null, topPts: 0, visits: [] };
+  }
+  // log this visit
+  venueData[venueKey].visits.push({ user: currentUser, pts, mode: modeLabel });
+  // recalculate this user's total at the venue (previous visits + this one)
+  const userTotal = getUserVenuePts(venueKey);
+  if (userTotal > venueData[venueKey].topPts) {
+    // user has overtaken the current leader — crown them
+    venueData[venueKey].topUser = currentUser;
+    venueData[venueKey].topPts = userTotal;
+    return 'crowned';
+  } else if (venueData[venueKey].topUser === currentUser) {
+    // user was already mayor and nobody has beaten them
+    return 'defending';
+  } else {
+    // someone else is still ahead
+    return 'challenger';
+  }
+}
+
+// Builds the Mayors tab UI — loops through all venues and renders a card for each
+function renderMayors() {
+  const list = document.getElementById('mayors-list');
+  const keys = Object.keys(venueData);
+  if (!keys.length) {
+    list.innerHTML = '<div class="empty-mayors"><div class="empty-icon">👑</div><div class="empty-text">No mayors yet. Complete a trip to claim your first venue!</div></div>';
+    return;
+  }
+  // map each venue to a card, highlighting venues the current user controls
+  list.innerHTML = keys.map(key => {
+    const v = venueData[key];
+    const isMe = v.topUser === currentUser;
+    return `<div class="mayor-card ${isMe ? 'mayor-yours' : ''}">
+      <div class="mayor-crown">${isMe ? '👑' : '🏪'}</div>
+      <div class="mayor-info">
+        <div class="mayor-venue">${v.name}</div>
+        <div class="mayor-name">${isMe ? '👑 You are the Mayor!' : 'Mayor: ' + v.topUser}</div>
+        <div class="mayor-pts">${v.topPts} eco-pts at this venue</div>
+      </div>
+      ${isMe ? '<div class="mayor-badge">Mayor</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+// Switches between the Rankings and Mayors sub-tabs inside the Board screen
+function showBoardTab(tab) {
+  document.getElementById('btab-rankings').classList.toggle('active', tab === 'rankings');
+  document.getElementById('btab-mayors').classList.toggle('active', tab === 'mayors');
+  document.getElementById('board-rankings').style.display = tab === 'rankings' ? '' : 'none';
+  document.getElementById('board-mayors').style.display = tab === 'mayors' ? '' : 'none';
+  if (tab === 'mayors') renderMayors();
+}
+// =============================================================
+// 4. BADGES
+// Each badge has a definition and a check() function.
+// check() receives the completed trip and full trip history,
+// and returns true if the badge should be awarded.
+// =============================================================
+
+const BADGE_DEFINITIONS = {
+
+  // 🌅 EARLY BIRD — trip started before 8:00am
+  earlyBird: {
+    id:    'earlyBird',
+    emoji: '🌅',
+    name:  'Early Bird',
+    desc:  'Started a trip before 8am',
+    // tripStartTime is the Date object of when the trip began
+    check: (trip, allTrips, tripStartTime) => tripStartTime.getHours() < 8
+  },
+
+  // 🌙 LAST ONE STANDING — trip started after 9:00pm
+  lastOneStanding: {
+    id:    'lastOneStanding',
+    emoji: '🌙',
+    name:  'Last One Standing',
+    desc:  'Started a trip after 9pm',
+    check: (trip, allTrips, tripStartTime) => tripStartTime.getHours() >= 21
+  },
+
+  // 🆕 PIONEER — first ever check-in at this venue (no prior visits from anyone)
+  // We check venueData BEFORE this visit was recorded, so visits.length === 1 means
+  // this trip just created the entry
+  pioneer: {
+    id:    'pioneer',
+    emoji: '🆕',
+    name:  'Pioneer',
+    desc:  'First ever check-in at a new venue',
+    check: (trip) => {
+      const key = normalizeVenue(trip.dest);
+      // if the venue only has 1 visit total, this user just created it
+      return venueData[key] && venueData[key].visits.length === 1;
+    }
+  },
+
+  // 🗺️ WEIRDEST ROUTE — used 3 or more transport modes in a single trip
+  weirdestRoute: {
+    id:    'weirdestRoute',
+    emoji: '🗺️',
+    name:  'Weirdest Route',
+    desc:  'Combined 3+ transport modes in one trip',
+    // trip.mode is a string like "🚌 Transit + 🚶 Walking + 🛹 Skateboard"
+    // splitting by '+' and counting gives us the number of modes
+    check: (trip) => trip.mode.split('+').length >= 3
+  },
+
+  // 🔥 ON A STREAK — last 3 trips in a row all used eco transport (i.e. no driving)
+  // Since all modes in this app are eco-friendly, this badge fires after 3 completed trips
+  onAStreak: {
+    id:    'onAStreak',
+    emoji: '🔥',
+    name:  'On a Streak',
+    desc:  '3 eco-friendly trips in a row',
+    // allTrips includes the current trip already pushed to the array
+    check: (trip, allTrips) => allTrips.length >= 3
+  },
+
+  // 👟 PURIST — every single trip so far used only walking or running (no wheels at all)
+  purist: {
+    id:    'purist',
+    emoji: '👟',
+    name:  'Purist',
+    desc:  'Every trip on foot — no wheels',
+    check: (trip, allTrips) => {
+      // check that every trip's mode string contains only Walking or Running
+      const footModes = ['Walking', 'Running'];
+      return allTrips.every(t =>
+        // split the mode label by '+', trim whitespace, then check each segment
+        t.mode.split('+').every(segment =>
+          footModes.some(fm => segment.includes(fm))
+        )
+      );
+    }
+  },
+
+  // 📏 DISTANCE WARRIOR — this trip is the longest you've ever taken (by duration)
+  distanceWarrior: {
+    id:    'distanceWarrior',
+    emoji: '📏',
+    name:  'Distance Warrior',
+    desc:  'Your longest trip yet',
+    check: (trip, allTrips) => {
+      // find the longest elapsed time across all previous trips (excluding current)
+      const prevTrips = allTrips.slice(1); // slice(1) skips the current trip at index 0
+      if (!prevTrips.length) return false; // can't be a record on your very first trip
+      const prevBest = Math.max(...prevTrips.map(t => t.elapsed));
+      return trip.elapsed > prevBest;
+    }
+  },
+
+  // 🤝 CONVOY — someone else checked into the same venue today
+  convoy: {
+    id:    'convoy',
+    emoji: '🤝',
+    name:  'Convoy',
+    desc:  'Same venue as another user today',
+    check: (trip) => {
+      const key = normalizeVenue(trip.dest);
+      const venue = venueData[key];
+      if (!venue) return false;
+      const today = new Date().toDateString();
+      // look for visits at this venue by OTHER users today
+      return venue.visits.some(v =>
+        v.user !== currentUser && new Date(v.ts || Date.now()).toDateString() === today
+      );
+    }
+  }
+};
+
+// Stores which badge IDs the user has already earned so we don't award duplicates
+let earnedBadges = new Set();
+
+// Called after every trip is saved.
+// Checks all badge definitions and returns an array of newly earned badges.
+function checkBadges(trip, allTrips, tripStartTime) {
+  const newlyEarned = [];
+  Object.values(BADGE_DEFINITIONS).forEach(badge => {
+    // skip badges the user already has
+    if (earnedBadges.has(badge.id)) return;
+    // run the badge's check function — if it returns true, award it
+    if (badge.check(trip, allTrips, tripStartTime)) {
+      earnedBadges.add(badge.id);
+      newlyEarned.push(badge);
+    }
+  });
+  return newlyEarned;
+}
+
+// Builds the badges section on the arrival screen.
+// Shows newly earned badges with a highlight, or hides the section if none were earned.
+function renderArrivalBadges(newBadges) {
+  // find or create the badges container on the arrival screen
+  let badgeContainer = document.getElementById('arrival-badges');
+  if (!badgeContainer) return;
+  if (!newBadges.length) {
+    badgeContainer.style.display = 'none';
+    return;
+  }
+  badgeContainer.style.display = '';
+  badgeContainer.innerHTML = `
+    <div class="arrival-badges-title">🏅 Badge${newBadges.length > 1 ? 's' : ''} Earned!</div>
+    ${newBadges.map(b => `
+      <div class="arrival-badge-item">
+        <span class="arrival-badge-emoji">${b.emoji}</span>
+        <div>
+          <div class="arrival-badge-name">${b.name}</div>
+          <div class="arrival-badge-desc">${b.desc}</div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// Builds the full badges wall on the Profile screen.
+// Shows all possible badges — earned ones are highlighted, unearned are greyed out.
+function renderProfileBadges() {
+  const container = document.getElementById('profile-badges');
+  if (!container) return;
+  container.innerHTML = Object.values(BADGE_DEFINITIONS).map(badge => {
+    const earned = earnedBadges.has(badge.id);
+    return `
+      <div class="profile-badge ${earned ? 'earned' : 'locked'}">
+        <div class="profile-badge-emoji">${badge.emoji}</div>
+        <div class="profile-badge-name">${badge.name}</div>
+        <div class="profile-badge-desc">${badge.desc}</div>
+        ${earned ? '<div class="profile-badge-check">✓</div>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// =============================================================
+// 5. AUTH
+// Login and signup are simulated — no real backend yet.
+// The email/name is just used to personalize the UI.
+// =============================================================
+
+// Toggles between the Sign In and Sign Up forms on the auth screen
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login' && i===0)||(tab==='signup' && i===1)));
+  document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('signup-form').style.display = tab === 'signup' ? '' : 'none';
+}
+
+// Extracts a display name from the email (e.g. "alex@gmail.com" → "Alex")
+function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const name = email.split('@')[0] || 'Traveler';
+  loginAs(capitalize(name));
+}
+
+// Uses the name field directly from the signup form
+function doSignup() {
+  const name = document.getElementById('signup-name').value || 'Traveler';
+  loginAs(capitalize(name));
+}
+
+// Actually "logs in" — sets currentUser, hides auth screen, shows app,
+// personalizes the UI, and renders initial data
+function loginAs(name) {
+  currentUser = name;
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  document.getElementById('topbar-user').textContent = name.split(' ')[0] + ' ▾';
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('profile-avatar').textContent = name[0].toUpperCase();
+  // show a random eco tip on the home screen
+  document.getElementById('eco-tip').textContent = ecoTips[Math.floor(Math.random()*ecoTips.length)];
+  renderLeaderboard();
+  renderFeed();
+  renderProfileBadges(); // initialize the badges wall on the profile screen
+}
+
+// Resets everything and returns to the login screen
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('auth-screen').classList.add('active');
+  showTab('home');
+}
+
+// Capitalizes the first letter of a string — used for display names
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+
+// =============================================================
+// 6. NAVIGATION
+// Controls which of the four main tabs is visible at any time.
+// =============================================================
+
+function showTab(tab) {
+  // loop through all tab names, show the active one, hide the rest
+  ['home','feed','board','profile'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? '' : 'none';
+    // update the bottom nav icon to highlight the active tab
+    const nav = document.getElementById('nav-' + t);
+    if (nav) nav.classList.toggle('active', t === tab);
+  });
+  // refresh data-driven tabs when they become visible
+  if (tab === 'feed') renderFeed();
+  if (tab === 'board') { renderLeaderboard(); renderMayors(); }
+  if (tab === 'profile') renderProfileBadges();
+}
+
+
+// =============================================================
+// 7. MODE SELECTION
+// Handles the transport mode picker on the home screen.
+// Multiple modes can be selected — each tap toggles one on/off.
+// =============================================================
+
+function selectMode(el, name, emoji) {
+  const idx = selectedModes.findIndex(m => m.name === name);
+  if (idx > -1) {
+    // mode was already selected — remove it from the array and deselect visually
+    selectedModes.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    // mode is new — add it to the array and highlight it
+    selectedModes.push({ name, emoji });
+    el.classList.add('selected');
+  }
+  checkStartReady();
+}
+
+// Enables the Start Trip button only when both a destination AND at least one mode are set
+function checkStartReady() {
+  const dest = document.getElementById('dest-input').value.trim();
+  document.getElementById('start-btn').disabled = !(dest && selectedModes.length > 0);
+}
+
+// Returns a human-readable string of all selected modes
+// e.g. "🚌 Transit + 🚶 Walking"
+function getModesLabel() {
+  return selectedModes.map(m => m.emoji + ' ' + m.name).join(' + ');
+}
+
+// Combines the stats of all selected modes into one object for calculations.
+// If you picked Transit + Walking, you get the sum of both modes' co2, cash, and pts.
+function getCombinedModeData() {
+  let co2PerMin = 0, cashPerMin = 0, pts = 0;
+  selectedModes.forEach(m => {
+    const d = modeData[m.name];
+    if (d) { co2PerMin += d.co2PerMin; cashPerMin += d.cashPerMin; pts += d.pts; }
+  });
+  return { co2PerMin, cashPerMin, pts };
+}
+
+// Listen for typing in the destination field — re-check if Start button should enable
+document.getElementById('dest-input').addEventListener('input', checkStartReady);
+
+// =============================================================
+// 8. TRIP
+// Controls the full journey flow: start → timer → arrive → save
+// =============================================================
+
+// Called when the user taps "Start Trip" on the home screen.
+// Records the start time and shows the fullscreen timer.
+function startTrip() {
+  const dest = document.getElementById('dest-input').value.trim();
+  if (!dest || !selectedModes.length) return;
+  tripStart = Date.now(); // store start time as a Unix timestamp in milliseconds
+  document.getElementById('timer-dest-name').textContent = dest;
+  document.getElementById('timer-mode-emoji').textContent = selectedModes.map(m => m.emoji).join('');
+  document.getElementById('timer-mode-name').textContent = getModesLabel();
+  document.getElementById('timer-screen').classList.add('active');
+  document.getElementById('timer-arc').style.strokeDashoffset = 0;
+  // setInterval calls updateTimer every 1000ms (1 second) to tick the clock
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Runs every second while a trip is active.
+// Updates the clock display and live CO2/cash savings.
+function updateTimer() {
+  // calculate how many seconds have passed since the trip started
+  const elapsed = Math.floor((Date.now() - tripStart) / 1000);
+  const mins = Math.floor(elapsed / 60);
+  const secs = elapsed % 60;
+  // padStart(2,'0') ensures "5" becomes "05" for a proper clock format
+  document.getElementById('timer-clock').textContent =
+    String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+  // convert elapsed seconds to minutes for the per-minute rate calculations
+  const elapsedMin = elapsed / 60;
+  const data = getCombinedModeData();
+  const co2  = (elapsedMin * data.co2PerMin).toFixed(2);
+  const cash = (elapsedMin * data.cashPerMin).toFixed(2);
+  document.getElementById('live-co2').textContent  = co2  + ' kg';
+  document.getElementById('live-cash').textContent = '$'  + cash;
+  // animate the ring arc — it completes one full rotation every 5 minutes (300 seconds)
+  const dashOffset = -((elapsed % 300) / 300) * 616;
+  document.getElementById('timer-arc').style.strokeDashoffset = dashOffset;
+}
+
+// Called when the user taps "Cancel Trip" — stops the timer and hides the timer screen
+function cancelTrip() {
+  clearInterval(timerInterval); // stop the ticking
+  document.getElementById('timer-screen').classList.remove('active');
+}
+
+// Called when the user taps "I've Arrived!" — stops the timer and shows the arrival screen
+function arriveAtDestination() {
+  clearInterval(timerInterval); // stop the ticking
+  // calculate final trip stats
+  const elapsed    = Math.floor((Date.now() - tripStart) / 1000);
+  const mins       = Math.floor(elapsed / 60);
+  const secs       = elapsed % 60;
+  const elapsedMin = elapsed / 60;
+  const data       = getCombinedModeData();
+  const co2        = (elapsedMin * data.co2PerMin).toFixed(2);
+  const cash       = (elapsedMin * data.cashPerMin).toFixed(2);
+  // base pts from modes + bonus pts for time (2 pts per minute of travel)
+  const earnedPts  = Math.round(data.pts + elapsedMin * 2);
+  const dest       = document.getElementById('dest-input').value.trim();
+
+  // populate the arrival screen stat cards
+  document.getElementById('arr-time').textContent        = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+  document.getElementById('arr-co2').textContent         = co2  + ' kg';
+  document.getElementById('arr-cash').textContent        = '$'  + cash;
+  document.getElementById('arr-pts').textContent         = '+'  + earnedPts;
+  document.getElementById('arrival-dest-label').textContent = 'Arrived at ' + dest;
+  // show a trophy if they ran, celebration otherwise
+  document.getElementById('arrival-emoji').textContent   = selectedModes.some(m => m.name === 'Running') ? '🏆' : '🎉';
+
+  // stash the completed trip temporarily — saveTrip() will commit it when tapped
+  window._pendingTrip = {
+    dest,
+    mode:    getModesLabel(),
+    emoji:   selectedModes.map(m => m.emoji).join(''),
+    elapsed,
+    co2:     parseFloat(co2),
+    cash:    parseFloat(cash),
+    pts:     earnedPts,
+    ts:      new Date(),
+    startedAt: new Date(tripStart) // store start time for Early Bird / Last One Standing badges
+  };
+
+  // ---- MAYOR MECHANIC ----
+  // check who currently holds the crown BEFORE recording this visit
+  const venueKey      = normalizeVenue(dest);
+  const existingMayor = getMayor(venueKey);
+  // record the visit and get back crowned / defending / challenger
+  const mayorStatus   = updateVenue(venueKey, dest, earnedPts, getModesLabel());
+  const banner        = document.getElementById('arrival-mayor-banner');
+  const bannerTitle   = document.getElementById('arrival-mayor-title');
+  const bannerSub     = document.getElementById('arrival-mayor-sub');
+  banner.style.display = '';
+  banner.className     = 'arrival-mayor-banner ' + mayorStatus;
+  if (mayorStatus === 'crowned') {
+    bannerTitle.textContent = '👑 You\'re the Mayor!';
+    bannerSub.textContent   = existingMayor
+      ? `You just dethroned ${existingMayor.name} at ${dest}. The crown is yours.`
+      : `You're the first eco-mayor of ${dest}. Nobody arrived greener.`;
+  } else if (mayorStatus === 'defending') {
+    bannerTitle.textContent = '🛡️ Still the Mayor';
+    bannerSub.textContent   = `You're defending your crown at ${dest}. Keep showing up.`;
+  } else {
+    const gap = existingMayor ? existingMayor.pts - getUserVenuePts(venueKey) : 0;
+    bannerTitle.textContent = '⚡ Challenger';
+    bannerSub.textContent   = `${existingMayor ? existingMayor.name + ' holds the crown here' : 'Someone else leads here'}. You need ${Math.max(0, gap)} more pts to take over.`;
+  }
+
+  // switch screens
+  document.getElementById('timer-screen').classList.remove('active');
+  document.getElementById('arrival-screen').classList.add('active');
+}
+
+// Called when the user taps "Save Trip ✓" on the arrival screen.
+// Commits the trip to history, updates stats, checks for badges, then goes to the feed.
+function saveTrip() {
+  const t = window._pendingTrip;
+  if (!t) return;
+
+  // add trip to the front of the history array (newest first)
+  trips.unshift(t);
+
+  // update running totals
+  userStats.co2   += t.co2;
+  userStats.cash  += t.cash;
+  userStats.pts   += t.pts;
+  userStats.trips += 1;
+
+  // ---- CHECK BADGES ----
+  // pass the trip, full history, and the time the trip started
+  const newBadges = checkBadges(t, trips, t.startedAt);
+  renderArrivalBadges(newBadges);    // show earned badges on arrival screen
+  renderProfileBadges();             // update the badges wall on profile screen
+
+  // update the user's entry on the leaderboard and re-sort
+  const me = leaderboardData.find(x => x.isMe);
+  if (me) { me.pts = userStats.pts; me.trips = userStats.trips; }
+  leaderboardData.sort((a,b) => b.pts - a.pts);
+
+  // push updated stats to the profile screen
+  document.getElementById('profile-co2').textContent   = userStats.co2.toFixed(1) + ' kg';
+  document.getElementById('profile-cash').textContent  = '$' + userStats.cash.toFixed(2);
+  document.getElementById('profile-trips').textContent = userStats.trips;
+  document.getElementById('profile-pts').textContent   = userStats.pts;
+  // XP bar: progress within the current 500-point level
+  document.getElementById('xp-text').textContent = (340 + userStats.pts % 500) + ' / 500 XP';
+  document.getElementById('xp-fill').style.width = Math.min(100, (userStats.pts % 500) / 500 * 100) + '%';
+
+  // reset the home screen form for the next trip
+  document.getElementById('dest-input').value = '';
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  selectedModes = [];
+  document.getElementById('start-btn').disabled = true;
+  // show a new eco tip
+  document.getElementById('eco-tip').textContent = ecoTips[Math.floor(Math.random() * ecoTips.length)];
+
+  // hide the arrival screen and go to trip history
+  document.getElementById('arrival-screen').classList.remove('active');
+  showTab('feed');
+}
+
+
+// =============================================================
+// 9. FEED
+// Renders the user's personal trip history.
+// =============================================================
+
+function renderFeed() {
+  const list = document.getElementById('feed-list');
+  document.getElementById('trip-count').textContent = trips.length + ' trip' + (trips.length !== 1 ? 's' : '');
+  if (!trips.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🗺️</div><div class="empty-text">No trips yet. Go somewhere green!</div></div>';
+    return;
+  }
+  // map each trip to a card and join them into one HTML string
+  list.innerHTML = trips.map(t => {
+    const mins    = Math.floor(t.elapsed / 60);
+    const secs    = t.elapsed % 60;
+    const timeStr = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+    const ago     = formatAgo(t.ts);
+    return `<div class="feed-item">
+      <div class="feed-header">
+        <div class="feed-dest">${t.emoji} ${t.dest}</div>
+        <div class="feed-time">${ago}</div>
+      </div>
+      <div class="feed-meta">
+        <div class="feed-badge">${t.mode}</div>
+        <div class="feed-duration">${timeStr}</div>
+      </div>
+      <div class="feed-stats">
+        <div class="feed-stat co2-val">${t.co2.toFixed(2)} kg <span>CO₂</span></div>
+        <div class="feed-stat cash-val">$${t.cash.toFixed(2)} <span>saved</span></div>
+        <div class="feed-stat pts-val">+${t.pts} <span>pts</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Converts a Date object into a relative time string like "Just now", "5m ago", "2h ago"
+function formatAgo(date) {
+  const s = Math.floor((Date.now() - date) / 1000);
+  if (s < 60)   return 'Just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  return Math.floor(s / 3600) + 'h ago';
+}
+
+
+// =============================================================
+// 10. LEADERBOARD
+// Renders the community rankings sorted by green points.
+// =============================================================
+
+function renderLeaderboard() {
+  const rankLabels = ['gold', 'silver', 'bronze']; // first three get colored rank numbers
+  const sorted = [...leaderboardData].sort((a,b) => b.pts - a.pts); // sort highest pts first
+  document.getElementById('leaderboard').innerHTML = sorted.map((u, i) => `
+    <div class="lb-item" ${u.isMe ? 'style="background:rgba(79,201,126,0.06)"' : ''}>
+      <div class="lb-rank ${rankLabels[i] || ''}">${i + 1}</div>
+      <div class="lb-avatar" style="${u.isMe ? 'background:rgba(79,201,126,0.2);color:var(--accent)' : ''}">${u.initials}</div>
+      <div class="lb-info">
+        <div class="lb-name">${u.name}${u.isMe ? ' <span style="color:var(--accent);font-size:0.7rem">(you)</span>' : ''}</div>
+        <div class="lb-pts">${u.trips + userStats.trips * (u.isMe ? 1 : 0)} trips</div>
+      </div>
+      <div class="lb-score">${u.pts.toLocaleString()} pts</div>
+    </div>
+  `).join('');
+}
+
+// =============================================================
+// INIT — set the starting tab when the page first loads
+// =============================================================
+showTab('home');
+</script>
+</body>
+</html>
