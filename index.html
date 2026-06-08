@@ -1,4 +1,3 @@
-<!-- ROADi © 2026 Leandra McGregor -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,6 +39,28 @@
     --accent2: #2ea85c;
     --radius: 16px;
     --radius-sm: 10px;
+  }
+
+  /* ===== SPLASH SCREEN =====
+     Full screen shown for 3 seconds before the app loads.
+     Uses opacity transition to fade out smoothly. */
+  #splash-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.5rem;
+    transition: opacity 0.6s ease;
+  }
+  #splash-screen.fade-out { opacity: 0; pointer-events: none; }
+  .splash-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem; color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .splash-logo span { color: var(--text3); }
+  .splash-tagline {
+    font-size: 0.85rem; color: var(--text3);
+    letter-spacing: 0.08em; text-transform: uppercase;
   }
 
   body {
@@ -453,42 +474,89 @@
 
   @media (min-width: 500px) {
     .modes { grid-template-columns: repeat(4, 1fr); }
-    .arrival-cards { grid-template-columns: repeat(4, 1fr); max-width: 440px; }
+    /* ===== SHAREABLE RESULT CARD =====
+     Styled to look great as an Instagram story screenshot.
+     9:16 aspect ratio feel, bold stats, share button. */
+  .share-card {
+    width: 100%; max-width: 340px;
+    background: linear-gradient(145deg, #172d20, #1e3828);
+    border: 1px solid rgba(79,201,126,0.2);
+    border-radius: 20px; padding: 1.5rem;
+    margin-bottom: 1rem; position: relative; overflow: hidden;
   }
+  .share-card::before {
+    /* subtle background glow for visual interest */
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(79,201,126,0.12), transparent 70%);
+    pointer-events: none;
+  }
+  .share-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+  .share-card-app { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--accent); }
+  .share-card-dest { font-size: 0.78rem; color: var(--text3); }
+  .share-card-mode { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .share-card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.1rem; }
+  .share-stat { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.75rem; }
+  .share-stat-val { font-size: 1.2rem; font-weight: 700; }
+  .share-stat-label { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+  .share-card-saving {
+    background: rgba(212,148,26,0.1); border: 1px solid rgba(212,148,26,0.25);
+    border-radius: 12px; padding: 0.75rem 1rem;
+    font-size: 0.82rem; color: var(--amber-200); line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  .share-card-saving strong { display: block; font-size: 1rem; margin-bottom: 0.2rem; }
+  .share-card-tagline { font-size: 0.72rem; color: var(--text3); text-align: center; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; }
+  .btn-share {
+    width: 100%; padding: 0.85rem;
+    background: var(--accent); color: var(--bg);
+    border: none; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+
+  /* Simple share button — matches arrival screen style */
+  .btn-share-simple {
+    width: 100%; max-width: 300px;
+    padding: 0.85rem;
+    background: rgba(79,201,126,0.12);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+  .btn-share-simple:active { background: rgba(79,201,126,0.2); }
+
+  /* ===== PRIVACY NOTE on timer screen ===== */
+  .privacy-note {
+    font-size: 0.72rem; color: var(--text3);
+    text-align: center; padding: 0 2rem;
+    line-height: 1.5; margin-top: 0.75rem;
+  }
+  .privacy-note span { color: var(--accent); }
 </style>
 </head>
 <body>
 
-<!-- ===== AUTH ===== -->
-<div id="auth-screen" class="screen active">
-  <div class="auth-logo">ROADi</div>
-  <div class="auth-tagline">Gas saving commuter app</div>
-  <div class="auth-box">
-    <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
-      <div class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</div>
-    </div>
-    <div id="login-form">
-      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" /></div>
-      <div class="field"><label>Password</label><input type="password" id="login-pw" placeholder="••••••••" /></div>
-      <button class="btn-primary" onclick="doLogin()">Sign In →</button>
-    </div>
-    <div id="signup-form" style="display:none">
-      <div class="field"><label>Your Name</label><input type="text" id="signup-name" placeholder="Alex Rivera" /></div>
-      <div class="field"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com" /></div>
-      <div class="field"><label>Password</label><input type="password" id="signup-pw" placeholder="Create a password" /></div>
-      <button class="btn-primary" onclick="doSignup()">Create Account →</button>
-    </div>
-  </div>
+<!-- ===== SPLASH SCREEN =====
+     Shows for 3 seconds then fades out — no login required.
+     The JS at the bottom handles the timing. -->
+<div id="splash-screen">
+  <div class="splash-logo">ROAD<span>i</span></div>
+  <div class="splash-tagline">Turn your errands into wins</div>
 </div>
 
 <!-- ===== MAIN APP ===== -->
-<div id="app-screen" class="screen">
+<div id="app-screen" class="screen active">
 
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-logo">ROADi</div>
-    <div class="topbar-user" onclick="showTab('profile')" id="topbar-user">Alex ▾</div>
+    <div class="topbar-user" onclick="showTab('profile')" id="topbar-user">You ▾</div>
   </div>
 
   <!-- CONTENT -->
@@ -526,8 +594,11 @@
           <div class="mode-card" onclick="selectMode(this,'E-Bike','⚡')">
             <div class="mode-icon">⚡</div><div class="mode-name">E-Bike</div>
           </div>
-          <div class="mode-card" onclick="selectMode(this,'Transit','🚌')">
-            <div class="mode-icon">🚌</div><div class="mode-name">Transit</div>
+          <div class="mode-card" onclick="selectMode(this,'Bus','🚌')">
+            <div class="mode-icon">🚌</div><div class="mode-name">Bus</div>
+          </div>
+          <div class="mode-card" onclick="selectMode(this,'Train','🚆')">
+            <div class="mode-icon">🚆</div><div class="mode-name">Train</div>
           </div>
           <div class="mode-card" onclick="selectMode(this,'Skateboard','🛹')">
             <div class="mode-icon">🛹</div><div class="mode-name">Skateboard</div>
@@ -541,11 +612,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Start Trip
         </button>
-      </div>
-
-      <div class="tip-card" style="margin-top:1rem">
-        <div class="tip-icon">🌱</div>
-        <div class="tip-text" id="eco-tip">Walking 1 mile instead of driving saves about 0.4 kg of CO₂ — the same as charging your phone 50 times.</div>
       </div>
     </div>
 
@@ -611,7 +677,7 @@
         </div>
       </div>
       <div style="padding: 0 1.25rem 1rem;">
-        <button onclick="doLogout()" style="width:100%;padding:0.75rem;background:none;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text3);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Sign Out</button>
+        <button onclick="alert('Sign in coming in a future version! 🙌')" style="width:100%;padding:0.75rem;background:none;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text3);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Sign In / Create Account</button>
       </div>
 
       <!-- BADGE WALL — shows all badges, earned ones highlighted, locked ones greyed out -->
@@ -675,7 +741,17 @@
   </div>
   <button class="btn-arrive" onclick="arriveAtDestination()">🏁 I've Arrived!</button>
   <button class="btn-cancel-trip" onclick="cancelTrip()">Cancel Trip</button>
-</div>
+  <!-- Privacy note — shown during active trip to build trust -->
+  <div class="privacy-note">
+    <span>Location tracked only during this trip.</span><br>
+    The moment you check in, we stop. No background tracking, ever.
+  </div>
+  <!-- Rotating fun fact — changes every 5 minutes to keep the timer screen interesting -->
+  <div class="tip-card" id="timer-tip" style="margin: 0.75rem 1.25rem 0;">
+    <div class="tip-icon">🌱</div>
+    <div class="tip-text" id="timer-tip-text"></div>
+  </div>
+</div><!-- /timer-screen -->
 
 <!-- ===== ARRIVAL SCREEN ===== -->
 <div class="arrival-screen" id="arrival-screen">
@@ -706,7 +782,11 @@
   </div>
   <!-- Badge notifications — only shown if new badges were earned this trip -->
   <div id="arrival-badges" style="display:none"></div>
-  <button class="btn-primary" style="max-width:300px; margin-bottom:0.75rem" onclick="saveTrip()">Save Trip ✓</button>
+
+  <!-- Simple share button — styled to match the arrival screen -->
+  <button class="btn-share-simple" onclick="shareResult()">📤 Share this Win</button>
+
+  <button class="btn-primary" style="max-width:300px; margin-bottom:0.75rem; background:none; border:1px solid var(--border2); color:var(--text3);" onclick="saveTrip()">Save & Continue →</button>
 </div>
 
 <script>
@@ -718,12 +798,13 @@
 //   2. CONSTANTS      — fixed data like mode stats, tips, leaderboard
 //   3. VENUE / MAYOR  — logic for tracking who's the mayor of each spot
 //   4. BADGES         — logic for earning and displaying achievement badges
-//   5. AUTH           — login / signup / logout
+//   5. SPLASH         — 3 second intro screen then straight into app
 //   6. NAVIGATION     — switching between the main tabs
 //   7. MODE SELECTION — picking how you got there (walk, bike, etc.)
 //   8. TRIP           — starting, timing, and completing a journey
-//   9. FEED           — your personal trip history
-//  10. LEADERBOARD    — community rankings
+//   9. SHARE CARD     — shareable Instagram-ready result card
+//  10. FEED           — your personal trip history
+//  11. LEADERBOARD    — community rankings
 // =============================================================
 
 
@@ -733,7 +814,7 @@
 // Think of them like the app's short-term memory.
 // =============================================================
 
-let currentUser = null;        // who is logged in right now (null = nobody)
+let currentUser = 'You';       // default user — no login required for prototype
 let selectedModes = [];        // array of transport modes chosen for the current trip
                                // e.g. [{ name: 'Transit', emoji: '🚌' }, { name: 'Walking', emoji: '🚶' }]
 let tripStart = null;          // timestamp (milliseconds) when the current trip started
@@ -761,7 +842,9 @@ const modeData = {
   'Running':     { co2PerMin: 0.10,  cashPerMin: 0.014, pts: 18, emoji: '🏃' },
   'Cycling':     { co2PerMin: 0.095, cashPerMin: 0.013, pts: 20, emoji: '🚴' },
   'E-Bike':      { co2PerMin: 0.085, cashPerMin: 0.011, pts: 16, emoji: '⚡' },
-  'Transit':     { co2PerMin: 0.06,  cashPerMin: 0.009, pts: 12, emoji: '🚌' },
+  'Bus':         { co2PerMin: 0.055, cashPerMin: 0.008, pts: 11, emoji: '🚌' },
+  // Train scores slightly higher than bus — more energy-efficient per passenger mile
+  'Train':       { co2PerMin: 0.065, cashPerMin: 0.010, pts: 13, emoji: '🚆' },
   'Skateboard':  { co2PerMin: 0.09,  cashPerMin: 0.012, pts: 14, emoji: '🛹' },
 };
 
@@ -1071,57 +1154,27 @@ function renderProfileBadges() {
 }
 
 // =============================================================
-// 5. AUTH
-// Login and signup are simulated — no real backend yet.
-// The email/name is just used to personalize the UI.
+// 5. SPLASH SCREEN
+// Shows the ROADi logo for 3 seconds then fades out.
+// No login needed — user goes straight into the app.
 // =============================================================
 
-// Toggles between the Sign In and Sign Up forms on the auth screen
-function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (tab==='login' && i===0)||(tab==='signup' && i===1)));
-  document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
-  document.getElementById('signup-form').style.display = tab === 'signup' ? '' : 'none';
-}
-
-// Extracts a display name from the email (e.g. "alex@gmail.com" → "Alex")
-function doLogin() {
-  const email = document.getElementById('login-email').value;
-  const name = email.split('@')[0] || 'Traveler';
-  loginAs(capitalize(name));
-}
-
-// Uses the name field directly from the signup form
-function doSignup() {
-  const name = document.getElementById('signup-name').value || 'Traveler';
-  loginAs(capitalize(name));
-}
-
-// Actually "logs in" — sets currentUser, hides auth screen, shows app,
-// personalizes the UI, and renders initial data
-function loginAs(name) {
-  currentUser = name;
-  document.getElementById('auth-screen').classList.remove('active');
-  document.getElementById('app-screen').classList.add('active');
-  document.getElementById('topbar-user').textContent = name.split(' ')[0] + ' ▾';
-  document.getElementById('profile-name').textContent = name;
-  document.getElementById('profile-avatar').textContent = name[0].toUpperCase();
-  // show a random eco tip on the home screen
-  document.getElementById('eco-tip').textContent = ecoTips[Math.floor(Math.random()*ecoTips.length)];
+function initSplash() {
+  // after 2.5 seconds, start the fade-out transition
+  setTimeout(() => {
+    const splash = document.getElementById('splash-screen');
+    splash.classList.add('fade-out');
+    // after the 0.6s CSS transition finishes, hide it completely
+    setTimeout(() => splash.style.display = 'none', 600);
+  }, 2500);
+  // initialize the app while splash is showing
+  document.getElementById('profile-name').textContent = currentUser;
+  document.getElementById('profile-avatar').textContent = '👤';
+  document.getElementById('topbar-user').textContent = 'You ▾';
   renderLeaderboard();
   renderFeed();
-  renderProfileBadges(); // initialize the badges wall on the profile screen
+  renderProfileBadges();
 }
-
-// Resets everything and returns to the login screen
-function doLogout() {
-  currentUser = null;
-  document.getElementById('app-screen').classList.remove('active');
-  document.getElementById('auth-screen').classList.add('active');
-  showTab('home');
-}
-
-// Capitalizes the first letter of a string — used for display names
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 
 // =============================================================
@@ -1206,8 +1259,23 @@ function startTrip() {
   document.getElementById('timer-mode-name').textContent = getModesLabel();
   document.getElementById('timer-screen').classList.add('active');
   document.getElementById('timer-arc').style.strokeDashoffset = 0;
-  // setInterval calls updateTimer every 1000ms (1 second) to tick the clock
+
+  // show a random fun fact when the trip starts,
+  // then rotate to a new one every 5 minutes (300 seconds)
+  showTimerTip();
   timerInterval = setInterval(updateTimer, 1000);
+}
+
+// Picks a random eco tip and displays it on the timer screen.
+// Called once at trip start, then every 300 seconds by updateTimer.
+let lastTipIndex = -1;
+function showTimerTip() {
+  // avoid repeating the same tip twice in a row
+  let idx;
+  do { idx = Math.floor(Math.random() * ecoTips.length); } while (idx === lastTipIndex && ecoTips.length > 1);
+  lastTipIndex = idx;
+  const tipEl = document.getElementById('timer-tip-text');
+  if (tipEl) tipEl.textContent = ecoTips[idx];
 }
 
 // Runs every second while a trip is active.
@@ -1227,6 +1295,9 @@ function updateTimer() {
   const cash = (elapsedMin * data.cashPerMin).toFixed(2);
   document.getElementById('live-co2').textContent  = co2  + ' kg';
   document.getElementById('live-cash').textContent = '$'  + cash;
+  // rotate the fun fact every 5 minutes (300 seconds) exactly
+  if (elapsed > 0 && elapsed % 300 === 0) showTimerTip();
+
   // animate the ring arc — it completes one full rotation every 5 minutes (300 seconds)
   const dashOffset = -((elapsed % 300) / 300) * 616;
   document.getElementById('timer-arc').style.strokeDashoffset = dashOffset;
@@ -1345,8 +1416,6 @@ function saveTrip() {
   document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
   selectedModes = [];
   document.getElementById('start-btn').disabled = true;
-  // show a new eco tip
-  document.getElementById('eco-tip').textContent = ecoTips[Math.floor(Math.random() * ecoTips.length)];
 
   // hide the arrival screen and go to trip history
   document.getElementById('arrival-screen').classList.remove('active');
@@ -1355,7 +1424,86 @@ function saveTrip() {
 
 
 // =============================================================
-// 9. FEED
+// 9. SHARE CARD
+// Populates the Instagram-ready result card and handles sharing.
+// The car maintenance copy makes savings feel concrete and funny.
+// =============================================================
+
+// Car maintenance milestones — ordered from cheapest to most expensive.
+// We pick the one that best matches the user's cumulative monthly savings.
+const carMilestones = [
+  { threshold: 5,   car: 'any car',           item: 'a car wash',                    emoji: '🚿' },
+  { threshold: 12,  car: 'a Toyota Corolla',  item: 'an oil change',                 emoji: '🔧' },
+  { threshold: 20,  car: 'a Honda Civic',    item: 'a full tank of gas',            emoji: '⛽' },
+  { threshold: 35,  car: 'a Nissan Altima',   item: 'a new air filter + wiper blades', emoji: '🌬️' },
+  { threshold: 60,  car: 'a Toyota Camry',    item: 'new brake pads',                emoji: '🛑' },
+  { threshold: 120, car: 'a Ford F-150',      item: 'a new alternator',              emoji: '⚡' },
+  { threshold: 200, car: 'a Ford F-150',      item: 'a new set of tires',            emoji: '🏎️' },
+];
+
+// Finds the best car maintenance comparison for a given savings amount.
+// Returns the highest milestone the savings have reached.
+function getCarMilestone(totalSaved) {
+  // filter to milestones at or below the savings amount, pick the highest one
+  const reached = carMilestones.filter(m => totalSaved >= m.threshold);
+  return reached.length ? reached[reached.length - 1] : null;
+}
+
+// Fills in all the share card fields for the current trip
+function populateShareCard(dest, pts, co2, cash, elapsed) {
+  const mins = Math.floor(elapsed / 60);
+  const secs = elapsed % 60;
+  document.getElementById('share-dest').textContent     = dest;
+  document.getElementById('share-mode-emoji').textContent = selectedModes.map(m => m.emoji).join(' ');
+  document.getElementById('share-co2').textContent      = co2 + ' kg';
+  document.getElementById('share-cash').textContent     = '$' + cash;
+  document.getElementById('share-pts').textContent      = '+' + pts + ' pts';
+  document.getElementById('share-time').textContent     = String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+
+  // calculate total cash saved this month (previous + this trip)
+  const totalSaved = userStats.cash + parseFloat(cash);
+  const milestone  = getCarMilestone(totalSaved);
+
+  if (milestone) {
+    // if savings match a milestone, show the car maintenance comparison
+    document.getElementById('share-saving-headline').textContent =
+      `${milestone.emoji} $${totalSaved.toFixed(0)} saved this month!`;
+    document.getElementById('share-saving-sub').textContent =
+      `That's enough for ${milestone.item} on ${milestone.car}.`;
+  } else {
+    // generic message for very small savings early on
+    document.getElementById('share-saving-headline').textContent = '💰 Every errand counts!';
+    document.getElementById('share-saving-sub').textContent =
+      `$${parseFloat(cash).toFixed(2)} saved this trip. Keep going!`;
+  }
+}
+
+// Handles the Share button tap.
+// Pulls stats directly from the arrival screen elements.
+// Uses the Web Share API if available (works on Android/iOS),
+// otherwise falls back to copying a text summary to clipboard.
+function shareResult() {
+  const dest     = document.getElementById('arrival-dest-label').textContent.replace('Arrived at ', '');
+  const co2      = document.getElementById('arr-co2').textContent;
+  const cash     = document.getElementById('arr-cash').textContent;
+  const pts      = document.getElementById('arr-pts').textContent;
+  const modes    = getModesLabel();
+  const totalSaved = userStats.cash;
+  const milestone  = getCarMilestone(totalSaved);
+  const savingLine = milestone
+    ? `${milestone.emoji} ${cash} saved — that's ${milestone.item} on ${milestone.car}!`
+    : `${cash} saved this trip. Every errand counts!`;
+  const shareText = `Just got to ${dest} by ${modes} with ROADi 🏆\n\n🌱 ${co2} CO₂ saved\n${savingLine}\n${pts} eco points\n\nTurn your errands into wins → roadi.app`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'My ROADi Win', text: shareText })
+      .catch(() => {});
+  } else {
+    navigator.clipboard.writeText(shareText)
+      .then(() => alert('Copied to clipboard! Paste it anywhere 🎉'))
+      .catch(() => alert('Share:\n\n' + shareText));
+  }
+}
 // Renders the user's personal trip history.
 // =============================================================
 
@@ -1421,9 +1569,10 @@ function renderLeaderboard() {
 }
 
 // =============================================================
-// INIT — set the starting tab when the page first loads
+// INIT — runs when the page first loads
 // =============================================================
-showTab('home');
+showTab('home');   // set the starting tab
+initSplash();      // show the splash screen then reveal the app
 </script>
 </body>
 </html>
