@@ -210,6 +210,23 @@
   .dest-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
   .dest-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
 
+  /* Select-specific overrides — removes default browser arrow, adds custom one */
+  select.dest-input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a9a6a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-color: var(--surface);
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+  /* Dark background for the dropdown list itself */
+  select.dest-input option { background: #1e3828; color: var(--text); }
+  select.dest-input optgroup { background: #172d20; color: var(--text3); font-size: 0.75rem; }
+  /* Placeholder option styled as hint text */
+  select.dest-input option[value=""] { color: var(--text3); }
+
   /* MODE SELECTOR */
   .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
   .mode-card {
@@ -575,7 +592,20 @@
           <div class="dest-icon">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="11" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
           </div>
-          <input class="dest-input" id="dest-input" placeholder="Coffee shop, gym, library…" type="text" />
+          <!-- Preset venue dropdown — replaces free text for prototype.
+               MVP will add GPS-based nearby places + search. -->
+          <select class="dest-input" id="dest-input" onchange="checkStartReady()">
+            <option value="">Choose a destination…</option>
+            <optgroup label="👑 Has a Mayor">
+              <option value="Aldi">🛒 Aldi</option>
+              <option value="Whole Foods">🥦 Whole Foods</option>
+              <option value="Library">📚 Library</option>
+            </optgroup>
+            <optgroup label="🆕 Unclaimed — be the first!">
+              <option value="Gym">🏋️ Gym</option>
+              <option value="Tap 42">🍺 Tap 42</option>
+            </optgroup>
+          </select>
         </div>
       </div>
 
@@ -1219,8 +1249,8 @@ function selectMode(el, name, emoji) {
 
 // Enables the Start Trip button only when both a destination AND at least one mode are set
 function checkStartReady() {
-  const dest = document.getElementById('dest-input').value.trim();
-  document.getElementById('start-btn').disabled = !(dest && selectedModes.length > 0);
+  const dest = document.getElementById('dest-input').value; // works for both input and select
+  document.getElementById('start-btn').disabled = !(dest && dest !== '' && selectedModes.length > 0);
 }
 
 // Returns a human-readable string of all selected modes
@@ -1240,8 +1270,7 @@ function getCombinedModeData() {
   return { co2PerMin, cashPerMin, pts };
 }
 
-// Listen for typing in the destination field — re-check if Start button should enable
-document.getElementById('dest-input').addEventListener('input', checkStartReady);
+// Note: the select uses onchange="checkStartReady()" directly in HTML — no listener needed here
 
 // =============================================================
 // 8. TRIP
